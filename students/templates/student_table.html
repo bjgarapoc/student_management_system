@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Home</title>
+</head>
+<body class="bg-orange-50">
+    <div class="flex justify-center mt-2">
+        <table class="bg-red-900 rounded-t-lg">
+            <thead>
+                <th class="p-2 border rounded-tl-g border-solid bold border-orange-50 text-center text-orange-50">Name</th>
+                <th class="p-2 border border-solid bold border-orange-50 text-center text-orange-50">Age</th>
+                <th class="p-2 border border-solid bold border-orange-50 text-center text-orange-50">Course</th>
+                <th class="p-2 border border-solid bold border-orange-50 text-center text-orange-50">Gender</th>
+                <th class="p-2 border rounded-tr-lg border-solid bold border-orange-50 text-center text-orange-50">Action</th>
+            </thead>
+            {% for stud in student %}
+            <tr>
+                <td class="p-2 border border-solid text-orange-50 border-orange-50">{{stud.first_name}} {{stud.last_name}}</td>
+                <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">{{stud.age}}</td>
+                <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">{{stud.course}}</td>
+                <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">{{stud.gender}}</td>
+                <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">
+                    <a href=""><button class="border rounded-lg w-half p-2 mx-1 bg-orange-50 text-red-900 text-center font-semibold hover:bg-orange-100">Update</button></a>
+                    <a href="delete/{{stud.id}}"><button id="del" class="border rounded-lg w-half p-2 mx-1 bg-orange-50 text-red-900 text-center font-semibold hover:bg-orange-100">Delete</button></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="flex justify-center">
+        <a href="{% url 'add' %}"><button class="border rounded-lg w-half p-2 mt-4 bg-red-900 text-orange-50 text-center font-semibold hover:bg-red-950">Add Student</button></a>
+    </div>
+</body>
+</html>

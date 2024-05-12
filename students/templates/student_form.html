@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Student</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class ="bg-orange-50">
+    <h2 class="font-bold text-2xl text-red-900 text-center m-5">Add Student Information</h2>
+    <div class="flex justify-center">
+      <form class="border p-10 rounded-lg bg-red-900" method="POST">
+        {% csrf_token %}
+
+        <div class="flex flex-col">
+          <label class="font-semibold text-white" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+          <input class="w-half border border-solid bold border-red-900 border-2 rounded" id="first_name" type="text" name="first_name" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}">
+        </div>
+
+        <div class="flex flex-col">
+          <label class="font-semibold text-white" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+          <input class="w-half border border-solid bold border-red-900 border-2 rounded" id="last_name" type="text" name="last_name" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
+        </div>
+
+        <div class="flex flex-col">
+          <label class="font-semibold text-white" for="{{ form.course.id_for_label }}">{{ form.course.label }}</label>
+          <select id="course" name="course" class="w-half border border-solid bold border-red-900 border-2 rounded text-red-900">
+            {% for value, label in form.course.field.choices %}
+                <option value="{{ value }}" {% if value == form.course.value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        </div>
+        
+        <div class="flex flex-col">
+          <label class="font-semibold text-white" for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
+          <div class="text-white">{{ form.gender }}</div>
+        </div>
+
+        <div class="flex flex-col">
+          <label class="font-semibold text-white" for="{{ form.age.id_for_label }}">{{ form.age.label }}</label>
+          <input class="w-half border border-solid bold border-red-900 border-2 rounded" id="age" type="number" name="age" value="{% if form.age.value %}{{ form.age.value }}{% endif %}">
+        </div>
+          <a href="{% url 'index' %}"><button class="border rounded-lg w-full p-2 mt-4 bg-orange-50 text-red-900 text-center font-semibold hover:bg-orange-100">Add Student</button></a>
+      </form>
+    </div>
+  </body>
+</html>
