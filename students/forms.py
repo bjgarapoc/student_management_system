@@ -19,8 +19,11 @@ class StudentForm(forms.Form):
     gender = forms.CharField(widget=forms.RadioSelect(choices=GENDER), required=True)
     age = forms.IntegerField(required=True)
 
-class FilterStudents(forms.Form):
+
+class FilterForm(forms.Form):
     full_name = forms.CharField(required=False)
     course = forms.CharField(widget=forms.RadioSelect(choices=COURSES), required=False)
     gender = forms.CharField(widget=forms.RadioSelect(choices=GENDER), required=False)
+    age_start = forms.IntegerField(required=False)
+    age_end = forms.IntegerField(required=False)
 

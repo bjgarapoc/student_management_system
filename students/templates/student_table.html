@@ -8,7 +8,13 @@
 </head>
 <body class="bg-orange-50">
     <div class="flex justify-center mt-2">
-        <table class="bg-red-900 rounded-t-lg">
+        <form class="border p-10 rounded-lg bg-red-900" method="POST">
+            {% csrf_token %}
+            {{ filter_form }}
+        </form>
+
+
+        <table class="bg-red-900 rounded-t-lg" method="POST">
             <thead>
                 <th class="p-2 border rounded-tl-g border-solid bold border-orange-50 text-center text-orange-50">Name</th>
                 <th class="p-2 border border-solid bold border-orange-50 text-center text-orange-50">Age</th>
@@ -23,7 +29,7 @@
                 <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">{{stud.course}}</td>
                 <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">{{stud.gender}}</td>
                 <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">
-                    <a href=""><button class="border rounded-lg w-half p-2 mx-1 bg-orange-50 text-red-900 text-center font-semibold hover:bg-orange-100">Update</button></a>
+                    <a href="{% url 'update' stud.id %}"><button id="upd" class="border rounded-lg w-half p-2 mx-1 bg-orange-50 text-red-900 text-center font-semibold hover:bg-orange-100">Update</button></a>
                     <a href="delete/{{stud.id}}"><button id="del" class="border rounded-lg w-half p-2 mx-1 bg-orange-50 text-red-900 text-center font-semibold hover:bg-orange-100">Delete</button></a>
                 </td>
             </tr>
