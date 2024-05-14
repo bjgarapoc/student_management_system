@@ -7,37 +7,76 @@
     <title>Home</title>
 </head>
 <body class="bg-orange-50">
-    <div class="flex justify-center mt-2">
-        <form class="border p-10 rounded-lg bg-red-900" method="POST">
-            {% csrf_token %}
-            {{ filter_form }}
-        </form>
+    <h2 class="font-bold text-2xl text-red-900 text-center m-5">Student Management System</h2>
+    <div class="flex justify-center mt-2 space-x-4">
+        <div>
+            <form class="border p-10 rounded-lg bg-red-900" method="POST">
+                {% csrf_token %}
+                <div class="flex flex-col">
+                    <label class="font-semibold text-white" for="{{ filter_form.full_name.id_for_label }}">{{ filter_form.full_name.label }}</label>
+                    <input class="w-half border border-solid bold border-red-900 border-2 rounded" id="full_name" type="text" name="full_name" value="{% if filter_form.full_name.value %}{{ filter_form.full_name.value }}{% endif %}">
+                </div>
 
+                <div class="flex flex-col">
+                    <label class="font-semibold text-white" for="{{ filter_form.course.id_for_label }}">{{ filter_form.course.label }}</label>
+                    <div class="text-white">{{ filter_form.course }}</div>
+                </div>
 
-        <table class="bg-red-900 rounded-t-lg" method="POST">
-            <thead>
-                <th class="p-2 border rounded-tl-g border-solid bold border-orange-50 text-center text-orange-50">Name</th>
-                <th class="p-2 border border-solid bold border-orange-50 text-center text-orange-50">Age</th>
-                <th class="p-2 border border-solid bold border-orange-50 text-center text-orange-50">Course</th>
-                <th class="p-2 border border-solid bold border-orange-50 text-center text-orange-50">Gender</th>
-                <th class="p-2 border rounded-tr-lg border-solid bold border-orange-50 text-center text-orange-50">Action</th>
-            </thead>
-            {% for stud in student %}
-            <tr>
-                <td class="p-2 border border-solid text-orange-50 border-orange-50">{{stud.first_name}} {{stud.last_name}}</td>
-                <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">{{stud.age}}</td>
-                <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">{{stud.course}}</td>
-                <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">{{stud.gender}}</td>
-                <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">
-                    <a href="{% url 'update' stud.id %}"><button id="upd" class="border rounded-lg w-half p-2 mx-1 bg-orange-50 text-red-900 text-center font-semibold hover:bg-orange-100">Update</button></a>
-                    <a href="delete/{{stud.id}}"><button id="del" class="border rounded-lg w-half p-2 mx-1 bg-orange-50 text-red-900 text-center font-semibold hover:bg-orange-100">Delete</button></a>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+                <div class="flex flex-col">
+                    <label class="font-semibold text-white" for="{{ filter_form.gender.id_for_label }}">{{ filter_form.gender.label }}</label>
+                    <div class="text-white">{{ filter_form.gender }}</div>
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="font-semibold text-white" for="{{ filter_form.age_start.id_for_label }}">{{ filter_form.age_start.label }}</label>
+                    <input class="w-half border border-solid bold border-red-900 border-2 rounded" id="age_start" type="number" name="age_start" value="{{ filter_form.age_start.value }}">
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="font-semibold text-white" for="{{ filter_form.age_end.id_for_label }}">{{ filter_form.age_end.label }}</label>
+                    <input class="w-half border border-solid bold border-red-900 border-2 rounded" id="age_end" type="number" name="age_end" value="{{ filter_form.age_end.value }}">
+                </div>
+                <button class="border rounded-lg w-full p-2 mt-4 bg-orange-50 text-red-900 text-center font-semibold hover:bg-orange-100">Filter</button>
+            </form>
+        </div>
+        <div>
+            <table class="bg-red-900 rounded-t-lg">
+                <thead>
+                    <tr>
+                        <th class="p-2 border rounded-tl-g border-solid bold border-orange-50 text-center text-orange-50">Name</th>
+                        <th class="p-2 border border-solid bold border-orange-50 text-center text-orange-50">Age</th>
+                        <th class="p-2 border border-solid bold border-orange-50 text-center text-orange-50">Course</th>
+                        <th class="p-2 border border-solid bold border-orange-50 text-center text-orange-50">Gender</th>
+                        <th class="p-2 border rounded-tr-lg border-solid bold border-orange-50 text-center text-orange-50">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stud in students %}
+                    <tr>
+                        <td class="p-2 border border-solid text-orange-50 border-orange-50">{{ stud.first_name }} {{ stud.last_name }}</td>
+                        <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">{{ stud.age }}</td>
+                        <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">{{ stud.course }}</td>
+                        <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">{{ stud.gender }}</td>
+                        <td class="p-2 border border-solid text-center text-orange-50 border-orange-50">
+                            <a href="{% url 'update' stud.id %}"><button id="upd" class="border rounded-lg w-half p-2 mx-1 bg-orange-50 text-red-900 text-center font-semibold hover:bg-orange-100">Update</button></a>
+                            <button onclick="deleteStudent({{ stud.id }})" id="del" class="border rounded-lg w-half p-2 mx-1 bg-orange-50 text-red-900 text-center font-semibold hover:bg-orange-100">Delete</button></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="flex justify-center">
         <a href="{% url 'add' %}"><button class="border rounded-lg w-half p-2 mt-4 bg-red-900 text-orange-50 text-center font-semibold hover:bg-red-950">Add Student</button></a>
     </div>
+    <script>
+        function deleteStudent(id){
+            let sure = confirm("Are you sure?")
+            if (sure){
+                window.location = "/delete/" + id
+            }
+        }
+    </script>
 </body>
 </html>

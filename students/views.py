@@ -1,73 +1,62 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .forms import StudentForm, FilterForm
 from .models import Student
 from django.db.models import Q
-# Create your views here.
+from django.db.models import Value, CharField
+from django.db.models.functions import Concat
 
 def home(request):
-    #POST
     if request.method == "POST":
         form = StudentForm(request.POST)
-        if(form.is_valid()):
+        if form.is_valid():
             student = Student(
-                first_name = form.cleaned_data["first_name"],
-                last_name = form.cleaned_data["last_name"],
-                course = form.cleaned_data["course"],
-                gender = form.cleaned_data["gender"],
-                age = form.cleaned_data["age"]
+                first_name=form.cleaned_data["first_name"],
+                last_name=form.cleaned_data["last_name"],
+                course=form.cleaned_data["course"],
+                gender=form.cleaned_data["gender"],
+                age=form.cleaned_data["age"]
             )
             student.save()
             return redirect("/")
-        
-    #GET
-    context = {}
-    context["form"] = StudentForm()
-    return render(request,'student_form.html', context)
-
-def filter_table(request):
-    students = Student.objects.all()
-    filter_form = FilterForm()
-    context = {}
-
-    # if request.method == "POST":
-    #     filter_form = FilterForm(request.POST)
-    #     if(filter_form.is_valid()):
-    #         full_name = filter_form.cleaned_data("full_name")
-    #         course = filter_form.cleaned_data("course")
-    #         gender = filter_form.cleaned_data("gender")
-    #         age_start = filter_form.cleaned_data("age_start")
-    #         age_end = filter_form.cleaned_data("age_end")
-            
-    #         filter = Q()
-    #         if full_name:
-    #             filter &= Q(first_name__startswith=full_name) | Q(last_name__startswith=full_name)
-    #         if course:
-    #             filter &= Q(course=course)
-    #         if gender:
-    #             filter &= Q(gender=gender)
-    #         if age_start and age_end:
-    #             filter &= Q(age__range=(age_start,age_end))
-
-    #         students = students.filter(filter)
+    else:
+        form = StudentForm()
     
-    context["filter_form"] = FilterForm()
-    # context = {'students':students,'filter_form': filter_form}
-    return render(request,'student_table.html', context)
+    context = {"form": form}
+    return render(request, 'student_form.html', context)
 
 def student_table(request):
-    student = Student.objects.all()
-    return render(request,'student_table.html',{'student':student})
+    students = Student.objects.all()
+    filter_form = FilterForm(request.POST)
+    
+    if filter_form.is_valid():
+        full_name = filter_form.cleaned_data["full_name"]
+        course = filter_form.cleaned_data["course"]
+        gender = filter_form.cleaned_data["gender"]
+        age_start = filter_form.cleaned_data["age_start"]
+        age_end = filter_form.cleaned_data["age_end"]
 
-def delete(request,id):
-    student=Student.objects.get(id=id)
+        filter = Q()
+        if full_name:
+            filter &= Q(first_name__icontains=full_name) |  Q(last_name__icontains=full_name)  | Q(full_name__icontains=full_name)
+        if course:
+            filter &= Q(course=course)
+        if gender:
+            filter &= Q(gender=gender)
+        if age_start and age_end:
+            filter &= Q(age__range=(age_start, age_end))
+
+        students  = students.annotate(full_name=Concat('first_name',Value(' ') ,'last_name',output_field=CharField())).filter(filter)
+    
+    context = {"students": students,"filter_form": filter_form}
+    return render(request, 'student_table.html', context)
+
+def delete(request, id):
+    student = Student.objects.get(id=id)
     student.delete()
     return redirect("/")
-    
+
 def update(request, id):
-    context = {}
     student = Student.objects.get(id=id)
-    
     if request.method == "POST":
         form = StudentForm(request.POST)
         if form.is_valid():
@@ -87,5 +76,5 @@ def update(request, id):
             'age': student.age
         })
     
-    context["form"] = form
+    context = {"form": form}
     return render(request, 'student_form.html', context)
