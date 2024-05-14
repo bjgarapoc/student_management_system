@@ -72,8 +72,8 @@
     </div>
     <script>
         function deleteStudent(id){
-            let sure = confirm("Are you sure?")
-            if (sure){
+            let message = confirm("Are you sure?")
+            if (message){
                 window.location = "/delete/" + id
             }
         }
